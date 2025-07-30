@@ -1,0 +1,383 @@
+{
+	"info": {
+		"_postman_id": "d37e9bca-1af2-42be-8f9d-cfe621e9a5b3",
+		"name": "File Upload API Tests",
+		"description": "Collection for testing file upload API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. User Login (Get Token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Store the token for future requests",
+							"var responseJson = pm.response.json();",
+							"",
+							"if (responseJson.success && responseJson.token) {",
+							"    pm.environment.set(\"authToken\", responseJson.token);",
+							"    console.log(\"Token saved to environment variable 'authToken'\");",
+							"}",
+							"",
+							"// Test response",
+							"pm.test(\"Login successful\", function () {",
+							"    pm.expect(responseJson.success).to.be.true;",
+							"    pm.expect(responseJson.token).to.exist;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@dentalclinic.com\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/users/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				},
+				"description": "Login to get JWT token for authentication"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Upload Single File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();",
+							"",
+							"// Store the file ID for future requests if available",
+							"if (responseJson.success && responseJson.file) {",
+							"    pm.environment.set(\"fileId\", responseJson.file.id || \"\");",
+							"}",
+							"",
+							"// Test response",
+							"pm.test(\"File upload successful\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.expect(responseJson.success).to.be.true;",
+							"    pm.expect(responseJson.message).to.include(\"uploaded successfully\");",
+							"    pm.expect(responseJson.file).to.exist;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "Select a file to upload"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/files/upload",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"files",
+						"upload"
+					]
+				},
+				"description": "Upload a single file. Select any file from your computer to test."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Upload Multiple Files",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();",
+							"",
+							"// Test response",
+							"pm.test(\"Multiple file upload successful\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.expect(responseJson.success).to.be.true;",
+							"    pm.expect(responseJson.message).to.include(\"files uploaded successfully\");",
+							"    pm.expect(responseJson.files).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files",
+							"type": "file",
+							"src": [
+								"Select multiple files"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/files/upload-multiple",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"files",
+						"upload-multiple"
+					]
+				},
+				"description": "Upload multiple files (up to 5). Select multiple files from your computer to test."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Get All User Files",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();",
+							"",
+							"// If there are files, store the first file ID for testing",
+							"if (responseJson.success && responseJson.files && responseJson.files.length > 0) {",
+							"    pm.environment.set(\"fileId\", responseJson.files[0].id);",
+							"    console.log(\"File ID saved: \" + responseJson.files[0].id);",
+							"}",
+							"",
+							"// Test response",
+							"pm.test(\"Get user files successful\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(responseJson.success).to.be.true;",
+							"    pm.expect(responseJson.files).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/files",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"files"
+					]
+				},
+				"description": "Get all files for the current authenticated user"
+			},
+			"response": []
+		},
+		{
+			"name": "5. Get File By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test response code",
+							"pm.test(\"Get file successful\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/files/{{fileId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"files",
+						"{{fileId}}"
+					]
+				},
+				"description": "Get a specific file by its ID"
+			},
+			"response": []
+		},
+		{
+			"name": "6. Delete File By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();",
+							"",
+							"// Test response",
+							"pm.test(\"Delete file successful\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(responseJson.success).to.be.true;",
+							"    pm.expect(responseJson.message).to.include(\"deleted successfully\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/files/{{fileId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"files",
+						"{{fileId}}"
+					]
+				},
+				"description": "Delete a file by ID"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "fileId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,15 @@
+{
+  "count": 1,
+  "users": [
+    {
+      "id": 1,
+      "role": "user",
+      "firstN": "Ana",
+      "lastN": "Popescu",
+      "phone": "+40721234567",
+      "email": "ana2@gmail.com",
+      "birthDate": "1992-03-14T22:00:00.000Z",
+      "CNP": "2920315123456"
+    }
+  ]
+}

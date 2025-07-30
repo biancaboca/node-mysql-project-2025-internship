@@ -1,0 +1,15 @@
+{
+  "count": 1,
+  "admins": [
+    {
+      "id": 1,
+      "role": "admin",
+      "firstN": "John",
+      "lastN": "Doe",
+      "email": "john.admin@example.com",
+      "phone": "1234567890",
+      "codeIdentify": "ADM001",
+      "department": "IT"
+    }
+  ]
+}

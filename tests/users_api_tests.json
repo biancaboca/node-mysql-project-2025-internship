@@ -1,0 +1,608 @@
+{
+	"info": {
+		"_postman_id": "cb4762e8-3faf-45e9-a983-5c6211a83d45",
+		"name": "Users API Tests",
+		"description": "Colecție de teste pentru API-ul de utilizatori",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Înregistrare - Register Client (Public)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"client_nou@example.com\",\n    \"password\": \"parola123\",\n    \"firstName\": \"Client\",\n    \"lastName\": \"Nou\",\n    \"phone\": \"0712345678\",\n    \"birthDate\": \"1990-05-15\",\n    \"codeIdentify\": \"1900515123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				},
+				"description": "Înregistrare client - metodă publică, accesibilă fără autentificare"
+			}
+		},
+		{
+			"name": "2. Create Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin_nou@example.com\",\n    \"password\": \"parola123\",\n    \"firstName\": \"Admin\",\n    \"lastName\": \"Nou\",\n    \"phone\": \"0723456789\",\n    \"birthDate\": \"1985-07-20\",\n    \"codeIdentify\": \"1850720123456\",\n    \"department\": \"IT\",\n    \"position\": \"Administrator sistem\",\n    \"salary\": 10000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"admin"
+					]
+				},
+				"description": "Creare administrator nou - necesită token de admin"
+			}
+		},
+		{
+			"name": "3. Create Employee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"employee_nou@example.com\",\n    \"password\": \"parola123\",\n    \"firstName\": \"Angajat\",\n    \"lastName\": \"Nou\",\n    \"phone\": \"0734567890\",\n    \"birthDate\": \"1995-03-10\",\n    \"codeIdentify\": \"1950310123456\",\n    \"hireDate\": \"2025-07-01\",\n    \"department\": \"Medical\",\n    \"position\": \"Doctor stomatolog\",\n    \"salary\": 8000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/employee",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"employee"
+					]
+				},
+				"description": "Creare angajat nou - necesită token de admin"
+			}
+		},
+		{
+			"name": "4. Create Client (Staff)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_or_employee_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"client_creat@example.com\",\n    \"password\": \"parola123\",\n    \"firstName\": \"Client\",\n    \"lastName\": \"Creat\",\n    \"phone\": \"0745678901\",\n    \"birthDate\": \"1988-11-25\",\n    \"codeIdentify\": \"1881125123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/client",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"client"
+					]
+				},
+				"description": "Creare client de către personal (admin sau angajat) - necesită token"
+			}
+		},
+		{
+			"name": "5. Create Generic User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\": \"client\",\n    \"email\": \"generic_user@example.com\",\n    \"password\": \"parola123\",\n    \"firstName\": \"Utilizator\",\n    \"lastName\": \"Generic\",\n    \"phone\": \"0756789012\",\n    \"birthDate\": \"1992-08-17\",\n    \"codeIdentify\": \"1920817123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "Creare utilizator generic - necesită token și permisiuni corespunzătoare"
+			}
+		},
+		{
+			"name": "6. Get My Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"profile"
+					]
+				},
+				"description": "Obținerea profilului propriu - necesită token"
+			}
+		},
+		{
+			"name": "7. Update My Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phone\": \"0799999999\",\n    \"email\": \"profil_actualizat@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"profile"
+					]
+				},
+				"description": "Actualizarea profilului propriu - necesită token"
+			}
+		},
+		{
+			"name": "8. Get All Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_or_employee_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "Obținerea tuturor utilizatorilor - necesită token și permisiuni"
+			}
+		},
+		{
+			"name": "9. Get Users By Role",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_or_employee_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/role/client",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"role",
+						"client"
+					]
+				},
+				"description": "Obținerea utilizatorilor după rol - necesită token și permisiuni"
+			}
+		},
+		{
+			"name": "10. Get All Admins",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/admins/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"admins",
+						"all"
+					]
+				},
+				"description": "Obținerea tuturor adminilor - necesită token de admin"
+			}
+		},
+		{
+			"name": "11. Get All Employees",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_or_employee_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/employees/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"employees",
+						"all"
+					]
+				},
+				"description": "Obținerea tuturor angajaților - necesită token de admin sau angajat"
+			}
+		},
+		{
+			"name": "12. Get All Clients",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_or_employee_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/clients/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"clients",
+						"all"
+					]
+				},
+				"description": "Obținerea tuturor clienților - necesită token și permisiuni"
+			}
+		},
+		{
+			"name": "13. Get User By ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				},
+				"description": "Obținerea unui utilizator după ID - Utilizatorii pot accesa doar propriul profil"
+			}
+		},
+		{
+			"name": "14. Update User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Nume Actualizat\",\n    \"lastName\": \"Prenume Actualizat\",\n    \"phone\": \"0788888888\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				},
+				"description": "Actualizarea unui utilizator - Admin poate modifica orice utilizator, utilizatorii doar propriul profil"
+			}
+		},
+		{
+			"name": "15. Change Password",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"currentPassword\": \"parola123\",\n    \"newPassword\": \"parolaNoua123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/1/change-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"1",
+						"change-password"
+					]
+				},
+				"description": "Schimbarea parolei - Utilizatorii pot schimba doar propria parolă"
+			}
+		},
+		{
+			"name": "16. Delete User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/users/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"3"
+					]
+				},
+				"description": "Ștergerea unui utilizator - necesită token și permisiuni"
+			}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "admin_token",
+			"value": "token_obtinut_din_login_ca_admin",
+			"type": "string"
+		},
+		{
+			"key": "user_token",
+			"value": "token_obtinut_din_login_ca_utilizator",
+			"type": "string"
+		},
+		{
+			"key": "admin_or_employee_token",
+			"value": "token_obtinut_din_login_ca_admin_sau_angajat",
+			"type": "string"
+		}
+	]
+}
